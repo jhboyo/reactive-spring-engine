@@ -1,4 +1,4 @@
-package com.derek.reactivespring;
+package com.derek.reactivespring.sample;
 
 public class Dish {
 

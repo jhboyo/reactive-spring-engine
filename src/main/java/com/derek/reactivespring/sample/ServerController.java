@@ -1,6 +1,8 @@
-package com.derek.reactivespring;
+package com.derek.reactivespring.sample;
 
 
+import com.derek.reactivespring.sample.Dish;
+import com.derek.reactivespring.sample.KitchenService;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;

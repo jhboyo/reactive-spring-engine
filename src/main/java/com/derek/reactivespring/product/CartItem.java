@@ -17,8 +17,14 @@ public class CartItem {
 
     private CartItem() {}
 
-    public CartItem(Item item, int quantity) {
+    public void increment() {
+        this.quantity++;
+    }
+    /*
+    * 새로운 상품을 카트에 담을 때 수량을 1로 지정 한다.
+    * */
+    CartItem(Item item) {
         this.item = item;
-        this.quantity = quantity;
+        this.quantity = 1;
     }
 }
