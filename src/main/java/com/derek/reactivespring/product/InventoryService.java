@@ -1,10 +1,7 @@
 package com.derek.reactivespring.product;
 
-import org.reactivestreams.Publisher;
-import org.slf4j.Logger;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
-import org.springframework.data.mongodb.core.ReactiveFluentMongoOperations;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
