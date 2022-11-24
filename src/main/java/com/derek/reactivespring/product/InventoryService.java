@@ -1,5 +1,6 @@
 package com.derek.reactivespring.product;
 
+import org.reactivestreams.Publisher;
 import org.slf4j.Logger;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.ExampleMatcher;
@@ -11,14 +12,30 @@ import reactor.core.publisher.Mono;
 @Service
 public class InventoryService {
 
-
     private ItemRepository itemRepository;
 
     private CartRepository cartRepository;
 
-    public InventoryService(ItemRepository itemRepository, CartRepository cartRepository) {
-        this.itemRepository = itemRepository;
+    InventoryService(ItemRepository repository,
+                     CartRepository cartRepository) {
+        this.itemRepository = repository;
         this.cartRepository = cartRepository;
+    }
+
+    public Mono<Cart> getCart(String cartId) {
+        return this.cartRepository.findById(cartId);
+    }
+
+    public Flux<Item> getInventory() {
+        return this.itemRepository.findAll();
+    }
+
+    Mono<Item> saveItem(Item newItem) {
+        return this.itemRepository.save(newItem);
+    }
+
+    Mono<Void> deleteItem(String id) {
+        return this.itemRepository.deleteById(id);
     }
 
     Flux<Item> searchByExample(String name, String description, boolean useAnd) {
@@ -63,4 +80,6 @@ public class InventoryService {
                .flatMap(cart -> this.cartRepository.save(cart))
                .log("savedCart");
     }
+
+
 }

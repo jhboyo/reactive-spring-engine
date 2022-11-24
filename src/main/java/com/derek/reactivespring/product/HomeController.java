@@ -11,27 +11,18 @@ import reactor.core.publisher.Mono;
 @Controller
 public class HomeController {
 
-    private final ItemRepository itemRepository;
-    private final CartRepository cartRepository;
+    private InventoryService inventoryService;
 
-    private final CartService cartService;
 
-    private final InventoryService inventoryService;
-
-    public HomeController(ItemRepository itemRepository, CartRepository cartRepository, CartService cartService, InventoryService inventoryService) {
-        this.itemRepository = itemRepository;
-        this.cartRepository = cartRepository;
-        this.cartService = cartService;
+    public HomeController(InventoryService inventoryService) {
         this.inventoryService = inventoryService;
     }
 
     @GetMapping
     Mono<Rendering> home() {
         return Mono.just(Rendering.view("home.html")
-                .modelAttribute("items", this.itemRepository.findAll().doOnNext(item -> {
-                    System.out.println(item.getName());
-                }))
-                .modelAttribute("cart" , this.cartRepository.findById("My Cart").defaultIfEmpty(new Cart("My Cart")))
+                .modelAttribute("items", this.inventoryService.getInventory())
+                .modelAttribute("cart" , this.inventoryService.getCart("My Cart").defaultIfEmpty(new Cart("My Cart")))
                 .build()
         );
     }
@@ -53,7 +44,7 @@ public class HomeController {
     ) {
         return Mono.just(Rendering.view("home.html")
                 .modelAttribute("items", inventoryService.searchByExample(name, description, useAnd))
-                .modelAttribute("cart", this.cartRepository.findById("My Cart").defaultIfEmpty(new Cart("My Cart")))
+                .modelAttribute("cart", this.inventoryService.getCart("My Cart").defaultIfEmpty(new Cart("My Cart")))
                 .build());
     }
 }

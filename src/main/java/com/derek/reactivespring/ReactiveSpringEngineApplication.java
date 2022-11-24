@@ -12,9 +12,9 @@ public class ReactiveSpringEngineApplication {
 	public static void main(String[] args) {
 		// Hooks.onOperatorDebug();
 
-		BlockHound.builder()
-						.allowBlockingCallsInside(TemplateEngine.class.getCanonicalName(), "process")
-						.install();
+		// BlockHound.builder()
+		// 				.allowBlockingCallsInside(TemplateEngine.class.getCanonicalName(), "process")
+		//				.install();
 
 		SpringApplication.run(ReactiveSpringEngineApplication.class, args);
 	}
