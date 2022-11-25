@@ -1,7 +1,6 @@
 package com.derek.reactivespring.product;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 import reactor.core.publisher.Mono;
 
 @Service

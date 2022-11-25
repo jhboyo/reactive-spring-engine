@@ -17,14 +17,14 @@
 		<java.version>13</java.version>
 	</properties>
 	<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-thymeleaf</artifactId>
-		</dependency>
+
+		<!-- tag::spring-boot-webflux[] -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-webflux</artifactId>
 		</dependency>
+		<!-- end::spring-boot-webflux[] -->
+
 		<!-- tag::spring-boot-actuator[] -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -47,11 +47,20 @@
 		</dependency>
 		<!-- end::mongodb[] -->
 
+		<!-- tag::lombok[] -->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
 			<scope>provided</scope>
 		</dependency>
+		<!-- end::lombok[] -->
+
+		<!-- tag::thymeleaf[] -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-thymeleaf</artifactId>
+		</dependency>
+		<!-- end::thymeleaf[] -->
 
 		<!-- tag::devtools[] -->
 		<dependency>
@@ -61,15 +70,22 @@
 			<optional>true</optional>
 		</dependency>
 		<!-- end::devtools[] -->
-		<!-- tag::blockhound[] -->
-<!--		<dependency>-->
-<!--			<groupId>io.projectreactor.tools</groupId>-->
-<!--			<artifactId>blockhound-junit-platform</artifactId>-->
-<!--			<version>1.0.6.RELEASE</version>-->
-<!--			<scope>test</scope>-->
-<!--		</dependency>-->
 
-		<!-- end::blockhound[] -->
+		<!-- tag::restdocs[] -->
+		<dependency>
+			<groupId>org.springframework.restdocs</groupId>
+			<artifactId>spring-restdocs-webtestclient</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.restdocs</groupId>
+			<artifactId>spring-restdocs-mockmvc</artifactId>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- end::restdocs[] -->
+
+		<!-- tag::test[] -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-test</artifactId>
@@ -86,6 +102,7 @@
 			<artifactId>reactor-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- end::test[] -->
 	</dependencies>
 
 	<build>
@@ -99,18 +116,68 @@
 					</layers>
 				</configuration>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.22.2</version>
-				<configuration>
-					<argLine>-XX:+AllowRedefinitionToAddDeleteMethods</argLine>
-				</configuration>
-			</plugin>
+<!--			<plugin>-->
+<!--				<groupId>org.apache.maven.plugins</groupId>-->
+<!--				<artifactId>maven-surefire-plugin</artifactId>-->
+<!--				<version>2.22.2</version>-->
+<!--				<configuration>-->
+<!--					<argLine>-XX:+AllowRedefinitionToAddDeleteMethods</argLine>-->
+<!--				</configuration>-->
+<!--			</plugin>-->
 			<plugin>
 				<groupId>pl.project13.maven</groupId>
 				<artifactId>git-commit-id-plugin</artifactId>
 			</plugin>
+			<!-- tag::restdocs-build[] -->
+			<plugin>
+				<groupId>org.asciidoctor</groupId>
+				<artifactId>asciidoctor-maven-plugin</artifactId>
+				<version>1.5.3</version>
+				<executions>
+					<execution>
+						<id>generate-docs</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>process-asciidoc</goal>
+						</goals>
+						<configuration>
+							<backend>html</backend>
+							<doctype>book</doctype>
+						</configuration>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.springframework.restdocs</groupId>
+						<artifactId>spring-restdocs-asciidoctor</artifactId>
+						<version>${spring-restdocs.version}</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<!-- end::restdocs-build[] -->
+			<!-- tag::restdocs-package[] -->
+			<plugin>
+				<artifactId>maven-resources-plugin</artifactId>
+				<version>2.7</version>
+				<executions>
+					<execution>
+						<id>copy-resources</id>
+						<phase>prepare-package</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.outputDirectory}/static/docs</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${project.build.directory}/generated-docs</directory>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- end::restdocs-package[] -->
 		</plugins>
 	</build>
 
